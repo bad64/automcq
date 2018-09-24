@@ -36,11 +36,12 @@ for i in range(len(sys.argv)):
         go = False
 
 #Check if file exists
-if not os.path.isfile(file) or file is None:
-    file = None
-else:
-    if verbose:
-        print("Operating on file", file, ":")
+if file is not None:
+    if not os.path.isfile(file):
+        file = None
+    else:
+        if verbose:
+            print("Operating on file", file, ":")
 
 #Main logic
 if go and file:
