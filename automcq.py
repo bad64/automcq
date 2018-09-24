@@ -1,8 +1,12 @@
 #!/usr/bin/python3
 
 from random import randint
-import openpyxl, sys, os.path
+import openpyxl, sys, platform, os.path
 
+#Get OS
+host = platform.system()
+
+#Flags
 blankmode = False
 verbose = False
 go = True
@@ -21,6 +25,7 @@ for i in range(len(sys.argv)):
     elif sys.argv[i] == "--verbose" or sys.argv[i] == "-v":
         verbose = True
     elif sys.argv[i] == "help":
+        print("AutoMCQ v1.01 by Bad64")
         print("Usage: automcq [switches] [xlsx file]")
         print("    -b or --blank: Only fills in blank cells (do not overwrite filled cells)")
         print("    -v or --verbose: Prints everything to the console")
@@ -47,20 +52,29 @@ if go and file:
                     ws[i] = possible_values[randint(0, 3)]
                 else:
                     char = possible_values[randint(0, 3)]
-                    print("Writing", char, "to cell", i)
+                    if host == "Linux":
+                        print("\033[92mWriting", char, "to cell", i)
+                    else:
+                        print("Writing", char, "to cell", i)
                     ws[i] = char
             else:
                 if verbose:
-                    print("Skipping cell", i)
+                    print("\033[93mSkipping cell", i)
         else:
             if not verbose:
                 ws[i] = possible_values[randint(0, 3)]
             else:
                 char = possible_values[randint(0, 3)]
-                print("Writing", char, "to cell", i)
+                if host == "Linux":
+                    print("\033[92mWriting", char, "to cell", i)
+                else:
+                    print("Writing", char, "to cell", i)
                 ws[i] = char
 
-    print("Donezo. Now get out of here !")
+    if host == "Linux":
+        print("\033[0mDonezo. Now get out of here !")
+    else:
+        print("Donezo. Now get out of here !")
     wb.save(sys.argv[1])
 elif go and not file:
     print("You must supply a valid xlsx file !")
