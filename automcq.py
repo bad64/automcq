@@ -20,10 +20,15 @@ if len(sys.argv) < 2:
 for i in range(len(sys.argv)):
     if sys.argv[i][-4:] == "xlsx":
         file = sys.argv[i]
-    elif sys.argv[i] == "--blank" or sys.argv[i] == "-b":
+    elif sys.argv[i] == "--blank":
         blankmode = True
-    elif sys.argv[i] == "--verbose" or sys.argv[i] == "-v":
+    elif sys.argv[i] == "--verbose":
         verbose = True
+    elif sys.argv[i][0] == '-' and sys.argv[i][1] != '-':
+        if "b" in sys.argv[i]:
+            blankmode = True
+        if "v" in sys.argv[i]:
+            verbose = True
     elif sys.argv[i] == "help":
         print("AutoMCQ v1.01 by Bad64")
         print("Usage: automcq [switches] [xlsx file]")
@@ -34,6 +39,9 @@ for i in range(len(sys.argv)):
 #Check if file exists
 if not os.path.isfile(file):
     file = None
+else:
+    if verbose:
+        print("Operating on file", file, ":")
 
 #Main logic
 if go and file:
@@ -43,7 +51,7 @@ if go and file:
     ws = wb[sheets[0]]
 
     possible_values = ['A', 'B', 'C', 'D']
-    cells = [ 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20', 'B21', 'B22', 'B23', 'B24', 'B25', 'B26', 'B27', 'B28', 'B29', 'B30', 'B31', 'B32', 'B33', 'B34', 'B35', 'B36', 'B37', 'B38', 'B39', 'B40', 'B41' ]
+    cells = [ 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20', 'B21', 'B22', 'B23', 'B24', 'B25', 'B26', 'B27', 'B28', 'B29', 'B30', 'B31', 'B32', 'B33', 'B34', 'B35', 'B36', 'B37', 'B38', 'B39', 'B40', 'B41' ]
     
     for i in cells:
         if blankmode:
@@ -75,6 +83,6 @@ if go and file:
         print("\033[0mDonezo. Now get out of here !")
     else:
         print("Donezo. Now get out of here !")
-    wb.save(sys.argv[1])
+    wb.save(file)
 elif go and not file:
     print("You must supply a valid xlsx file !")
