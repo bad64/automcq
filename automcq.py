@@ -14,7 +14,6 @@ file = None
 
 #Parsing command line args
 if len(sys.argv) < 2:
-    print("Feed me a workbook ! Or type \"automcq help\" to get help.")
     go = False
 
 for i in range(len(sys.argv)):
@@ -37,7 +36,7 @@ for i in range(len(sys.argv)):
         go = False
 
 #Check if file exists
-if not os.path.isfile(file):
+if not os.path.isfile(file) or file is None:
     file = None
 else:
     if verbose:
@@ -86,3 +85,5 @@ if go and file:
     wb.save(file)
 elif go and not file:
     print("You must supply a valid xlsx file !")
+elif not go:
+    print("Feed me a workbook ! Or type \"automcq help\" to get help.")
