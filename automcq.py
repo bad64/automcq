@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
-from random import randint
-import openpyxl, sys, platform, os.path
+import openpyxl, sys, platform, random, os.path
 
 #Get OS
 host = platform.system()
@@ -18,7 +17,7 @@ if len(sys.argv) < 2:
     go = False
 
 for i in range(len(sys.argv)):
-    if sys.argv[i][-4:] == "xlsx":
+    if sys.argv[i][-4:] == "xlsx" and (sys.argv[i-1] != "-o" or sys.argv[i-1] != "--output"):
         if not file:
             file = sys.argv[i]
     elif sys.argv[i] == "--blank":
@@ -49,6 +48,10 @@ if file is not None:
         if verbose:
             print("Operating on file", file, ":")
 
+#Validating output file
+if saveAs and saveAs[-5:] != ".xlsx":
+    saveAs += ".xlsx"
+
 #Main logic
 if saveAs is not None:
     print("Writing to file", saveAs)
@@ -59,6 +62,8 @@ if go and file:
     sheets = wb.sheetnames
     ws = wb[sheets[0]]
 
+    random.SystemRandom()
+
     possible_values = ['A', 'B', 'C', 'D']
     cells = [ 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20', 'B21', 'B22', 'B23', 'B24', 'B25', 'B26', 'B27', 'B28', 'B29', 'B30', 'B31', 'B32', 'B33', 'B34', 'B35', 'B36', 'B37', 'B38', 'B39', 'B40', 'B41' ]
     
@@ -66,26 +71,29 @@ if go and file:
         if blankmode:
             if not ws[cells[i]].value:
                 if not verbose:
-                    ws[cells[i]] = possible_values[randint(0, 3)]
+                    ws[cells[i]] = possible_values[random.randint(0, 3)]
                 else:
-                    char = possible_values[randint(0, 3)]
+                    char = possible_values[random.randint(0, 3)]
                     if host == "Linux":
-                        print("\033[92mWriting", char, "to cell", i)
+                        print("\033[92mAnswering", char, "to question", i+1)
                     else:
-                        print("Writing", char, "to cell", i)
+                        print("Answering", char, "to question", i+1)
                     ws[cells[i]] = char
             else:
                 if verbose:
-                    print("\033[93mSkipping cell", i)
+                    if host == "Linux":
+                        print("\033[93mSkipping question", i+1)
+                    else:
+                        print("Skipping question", i+1)
         else:
             if not verbose:
-                ws[cells[i]] = possible_values[randint(0, 3)]
+                ws[cells[i]] = possible_values[random.randint(0, 3)]
             else:
-                char = possible_values[randint(0, 3)]
+                char = possible_values[random.randint(0, 3)]
                 if host == "Linux":
-                    print("\033[92mWriting", char, "to cell", i)
+                    print("\033[92mAnswering", char, "to question", i+1)
                 else:
-                    print("Writing", char, "to cell", i)
+                    print("Answering", char, "to cell", i+1)
                 ws[cells[i]] = char
 
     if host == "Linux":
