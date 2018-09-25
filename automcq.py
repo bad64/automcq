@@ -9,8 +9,8 @@ host = platform.system()
 blankmode = False
 verbose = False
 go = True
-file = None
-saveAs = None
+inputfile = None
+outputfile = None
 
 #Parsing command line args
 if len(sys.argv) < 2:
@@ -21,8 +21,8 @@ possibleArgs = [ "--blank", "--verbose", "--output", "help" ]
 
 for i in range(len(sys.argv)):
     if sys.argv[i][-4:] == "xlsx" and (sys.argv[i-1] != "-o" or sys.argv[i-1] != "--output"):
-        if not file:
-            file = sys.argv[i]
+        if not inputfile:
+            inputfile = sys.argv[i]
     elif sys.argv[i] == "--blank":
         blankmode = True
     elif sys.argv[i] == "--verbose":
@@ -30,7 +30,7 @@ for i in range(len(sys.argv)):
     elif sys.argv[i] == "-o" or sys.argv[i] == "--output":
         if i+1 < len(sys.argv):
             if sys.argv[i+1] not in possibleArgs and sys.argv[i+1][0] != '-':
-                saveAs = sys.argv[i+1]
+                outputfile = sys.argv[i+1]
             else:
                 if host == "Linux":
                     print("\033[91mInvalid output file parameter\033[0m")
@@ -45,7 +45,7 @@ for i in range(len(sys.argv)):
 
                     if ok == 'y' or ok == 'Y':
                         go = True
-                        saveAs = None
+                        outputfile = None
                     elif ok == 'n' or ok == 'N' or ok == '':
                         go = False
         else:
@@ -62,7 +62,7 @@ for i in range(len(sys.argv)):
 
                 if ok == 'y' or ok == 'Y':
                     go = True
-                    saveAs = None
+                    outputfile = None
                 elif ok == 'n' or ok == 'N' or ok == '':
                     go = False
     elif sys.argv[i][0] == '-' and sys.argv[i][1] != '-':
@@ -80,23 +80,23 @@ for i in range(len(sys.argv)):
         go = False
 
 #Check if file exists
-if file is not None:
-    if not os.path.isfile(file):
-        file = None
+if inputfile is not None:
+    if not os.path.isfile(inputfile):
+        inputfile = None
     else:
         if verbose and go:
-            print("Operating on file", file, ":")
+            print("Operating on file", inputfile, ":")
 
 #Validating output file
-if saveAs and saveAs[-5:] != ".xlsx":
-    saveAs += ".xlsx"
+if outputfile and outputfile[-5:] != ".xlsx":
+    outputfile += ".xlsx"
 
 #Main logic
-if saveAs is not None:
-    print("Writing to file", saveAs)
+if outputfile is not None:
+    print("Writing to file", outputfile)
     
-if go and file:
-    wb = openpyxl.load_workbook(filename = file)
+if go and inputfile:
+    wb = openpyxl.load_workbook(filename = inputfile)
 
     sheets = wb.sheetnames
     ws = wb[sheets[0]]
@@ -140,12 +140,12 @@ if go and file:
     else:
         print("Donezo. Now get out of here !")
 
-    if saveAs:
-        wb.save(saveAs)
+    if outputfile:
+        wb.save(outputfile)
     else:
-        wb.save(file)
+        wb.save(inputfile)
         
-elif go and not file:
+elif go and not inputfile:
     print("You must supply a valid xlsx file !")
 elif not go:
     print("", sep="", end="")
