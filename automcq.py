@@ -11,6 +11,7 @@ blankmode = False
 verbose = False
 go = True
 file = None
+saveAs = None
 
 #Parsing command line args
 if len(sys.argv) < 2:
@@ -28,6 +29,8 @@ for i in range(len(sys.argv)):
             blankmode = True
         if "v" in sys.argv[i]:
             verbose = True
+        if "o" in sys.argv[i]:
+            saveAs = sys.argv[i+1]
     elif sys.argv[i] == "help":
         print("AutoMCQ v1.01 by Bad64")
         print("Usage: automcq [switches] [xlsx file]")
@@ -83,7 +86,12 @@ if go and file:
         print("\033[0mDonezo. Now get out of here !")
     else:
         print("Donezo. Now get out of here !")
-    wb.save(file)
+
+    if saveAs:
+        wb.save(saveAs)
+    else:
+        wb.save(file)
+        
 elif go and not file:
     print("You must supply a valid xlsx file !")
 elif not go:
