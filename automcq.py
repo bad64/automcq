@@ -19,7 +19,8 @@ if len(sys.argv) < 2:
 
 for i in range(len(sys.argv)):
     if sys.argv[i][-4:] == "xlsx":
-        file = sys.argv[i]
+        if not file:
+            file = sys.argv[i]
     elif sys.argv[i] == "--blank":
         blankmode = True
     elif sys.argv[i] == "--verbose":
@@ -31,11 +32,13 @@ for i in range(len(sys.argv)):
             verbose = True
         if "o" in sys.argv[i]:
             saveAs = sys.argv[i+1]
+            i += 1
     elif sys.argv[i] == "help":
         print("AutoMCQ v1.01 by Bad64")
         print("Usage: automcq [switches] [xlsx file]")
         print("    -b or --blank: Only fills in blank cells (do not overwrite filled cells)")
         print("    -v or --verbose: Prints everything to the console")
+        print("    -o=<file>: Outputs the new filled workbook to file")
         go = False
 
 #Check if file exists
@@ -47,6 +50,9 @@ if file is not None:
             print("Operating on file", file, ":")
 
 #Main logic
+if saveAs is not None:
+    print("Writing to file", saveAs)
+    
 if go and file:
     wb = openpyxl.load_workbook(filename = file)
 
@@ -56,31 +62,31 @@ if go and file:
     possible_values = ['A', 'B', 'C', 'D']
     cells = [ 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20', 'B21', 'B22', 'B23', 'B24', 'B25', 'B26', 'B27', 'B28', 'B29', 'B30', 'B31', 'B32', 'B33', 'B34', 'B35', 'B36', 'B37', 'B38', 'B39', 'B40', 'B41' ]
     
-    for i in cells:
+    for i in range(len(cells)):
         if blankmode:
-            if not ws[i].value:
+            if not ws[cells[i]].value:
                 if not verbose:
-                    ws[i] = possible_values[randint(0, 3)]
+                    ws[cells[i]] = possible_values[randint(0, 3)]
                 else:
                     char = possible_values[randint(0, 3)]
                     if host == "Linux":
                         print("\033[92mWriting", char, "to cell", i)
                     else:
                         print("Writing", char, "to cell", i)
-                    ws[i] = char
+                    ws[cells[i]] = char
             else:
                 if verbose:
                     print("\033[93mSkipping cell", i)
         else:
             if not verbose:
-                ws[i] = possible_values[randint(0, 3)]
+                ws[cells[i]] = possible_values[randint(0, 3)]
             else:
                 char = possible_values[randint(0, 3)]
                 if host == "Linux":
                     print("\033[92mWriting", char, "to cell", i)
                 else:
                     print("Writing", char, "to cell", i)
-                ws[i] = char
+                ws[cells[i]] = char
 
     if host == "Linux":
         print("\033[0mDonezo. Now get out of here !")
