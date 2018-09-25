@@ -25,20 +25,20 @@ for i in range(len(sys.argv)):
         blankmode = True
     elif sys.argv[i] == "--verbose":
         verbose = True
+    elif sys.argv[i] == "-o" or sys.argv[i] == "--output":
+        saveAs = sys.argv[i+1]
+        i += 1
     elif sys.argv[i][0] == '-' and sys.argv[i][1] != '-':
         if "b" in sys.argv[i]:
             blankmode = True
         if "v" in sys.argv[i]:
             verbose = True
-        if "o" in sys.argv[i]:
-            saveAs = sys.argv[i+1]
-            i += 1
     elif sys.argv[i] == "help":
-        print("AutoMCQ v1.01 by Bad64")
+        print("AutoMCQ v1.07 by Bad64")
         print("Usage: automcq [switches] [xlsx file]")
         print("    -b or --blank: Only fills in blank cells (do not overwrite filled cells)")
         print("    -v or --verbose: Prints everything to the console")
-        print("    -o=<file>: Outputs the new filled workbook to file")
+        print("    -o <file> or --output <file>: Outputs the new filled workbook to file")
         go = False
 
 #Check if file exists
