@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-
-import openpyxl, sys, platform, random, os.path
+    
+import sys, platform, random, os.path
 
 #Get OS
 host = platform.system()
@@ -9,15 +9,16 @@ host = platform.system()
 blankmode = False
 verbose = False
 go = True
+gui = False
 inputfile = None
 outputfile = None
 
 #Parsing command line args
-if len(sys.argv) < 2:
-    print("Feed me a workbook ! Or type \"automcq help\" to get help.")
+if len(sys.argv) < 2 and not gui:
+    print("Feed me a workbook ! Or type \"" + sys.argv[0] + " help\" to get help.")
     go = False
 
-possibleArgs = [ "--blank", "--verbose", "--output", "help" ]
+possibleArgs = [ "--blank", "--verbose", "--output", "help", "--gui" ]
 
 for i in range(len(sys.argv)):
     if sys.argv[i][-4:] == "xlsx" and (sys.argv[i-1] != "-o" or sys.argv[i-1] != "--output"):
@@ -27,6 +28,8 @@ for i in range(len(sys.argv)):
         blankmode = True
     elif sys.argv[i] == "--verbose":
         verbose = True
+    elif sys.argv[i] == "--gui":
+        gui = True
     elif sys.argv[i] == "-o" or sys.argv[i] == "--output":
         if i+1 < len(sys.argv):
             if sys.argv[i+1] not in possibleArgs and sys.argv[i+1][0] != '-':
@@ -70,29 +73,68 @@ for i in range(len(sys.argv)):
             blankmode = True
         if "v" in sys.argv[i]:
             verbose = True
+        if "g" in sys.argv[i]:
+            gui = True
     elif sys.argv[i] == "help":
         print("AutoMCQ v1.08 by Bad64")
         print("Usage: automcq [switches] [xlsx file]")
         print("    -b or --blank: Only fills in blank cells (do not overwrite filled cells)")
         print("    -v or --verbose: Prints everything to the console")
+        print("    -g or --gui: Launches the program in GUI mode")
         print("    -o <file> or --output <file>: Outputs the new filled workbook to file")
-        print("        (Note: \"-o\" switch has to be on its own")
+        print("        (Note: \"-o\" switch has to be on its own)")
         go = False
 
-#Check if file exists
-if inputfile is not None:
-    if not os.path.isfile(inputfile):
-        inputfile = None
+#Are we using the GUI ?
+if gui:
+    try:
+        from tkinter import Tk, messagebox
+        from tkinter.filedialog import askopenfilename, asksaveasfilename
+    except ImportError:
+        if host == "Linux":
+            print("\033[91mERROR: \033[0mThis program cannot function without tkinter.")
+        else:
+            print("ERROR: This program cannot function without tkinter.")
+        exit(1)
+        
+    Tk().withdraw()
+
+#Do we even have openpyxl ?
+try:
+    import openpyxl
+except ImportError:
+    if gui:
+        messagebox.showerror("Error", "This program cannot function without openpyxl.")
     else:
-        if verbose and go:
-            print("Operating on file", inputfile, ":")
+        if host == "Linux":
+            print("\033[92mERROR: \033[0mThis program cannot function without openpyxl.")
+        else:
+            print("ERROR: This program cannot function without openpyxl.")
+    exit(1)
+
+#Check if file exists
+if not gui:
+    if inputfile is not None:
+        if not os.path.isfile(inputfile):
+            inputfile = None
+        else:
+            if verbose and go:
+                print("Operating on file", inputfile, ":")
+else:
+    inputfile = askopenfilename(title = "Open", filetypes = (("Excel file","*.xlsx"),("all files","*.*")))
+
+    if not inputfile:
+        go = False
 
 #Validating output file
-if outputfile and outputfile[-5:] != ".xlsx":
-    outputfile += ".xlsx"
+if not gui:
+    if outputfile and outputfile[-5:] != ".xlsx":
+        outputfile += ".xlsx"
+else:
+    outputfile = asksaveasfilename(defaultextension = ".xlsx", title = "Save as", filetypes = (("Excel file","*.xlsx"),("all files","*.*")))
 
 #Main logic
-if outputfile is not None:
+if outputfile is not None and outputfile != inputfile:
     print("Writing to file", outputfile)
     
 if go and inputfile:
@@ -135,10 +177,13 @@ if go and inputfile:
                     print("Answering", char, "to cell", i+1)
                 ws[cells[i]] = char
 
-    if host == "Linux":
-        print("\033[0mDonezo. Now get out of here !")
+    if not gui:
+        if host == "Linux":
+            print("\033[0mDonezo. Now get out of here !")
+        else:
+            print("Donezo. Now get out of here !")
     else:
-        print("Donezo. Now get out of here !")
+        messagebox.showinfo("Success", "Donezo. Now get out of here !")
 
     if outputfile:
         wb.save(outputfile)

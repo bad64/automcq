@@ -7,6 +7,11 @@ answers.
 
 Depends on openpyxl. Everything else should be part of Python's standard library.
 
+**Installation**
+
+Linux: sudo make install  
+Windows: 🤷
+
 **Why Python ?**
 
 Didn't find a library to do it in C/C++.
