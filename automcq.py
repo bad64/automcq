@@ -95,7 +95,7 @@ if gui:
             print("\033[91mERROR: \033[0mThis program cannot function without tkinter.")
         else:
             print("ERROR: This program cannot function without tkinter.")
-        exit(1)
+        sys.exit(1)
         
     Tk().withdraw()
 
@@ -110,7 +110,7 @@ except ImportError:
             print("\033[92mERROR: \033[0mThis program cannot function without openpyxl.")
         else:
             print("ERROR: This program cannot function without openpyxl.")
-    exit(1)
+    sys.exit(1)
 
 #Check if file exists
 if not gui:
@@ -124,7 +124,7 @@ else:
     inputfile = askopenfilename(title = "Open", filetypes = (("Excel file","*.xlsx"),("all files","*.*")))
 
     if not inputfile:
-        go = False
+        sys.exit(0)
 
 #Validating output file
 if not gui:
@@ -132,6 +132,9 @@ if not gui:
         outputfile += ".xlsx"
 else:
     outputfile = asksaveasfilename(defaultextension = ".xlsx", initialfile = inputfile, title = "Save as", filetypes = (("Excel file","*.xlsx"),("all files","*.*")))
+
+    if not outputfile:
+        sys.exit(0)
 
 #Main logic
 if outputfile is not None and outputfile != inputfile:
