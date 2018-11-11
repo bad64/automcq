@@ -131,11 +131,19 @@ if not gui:
     if outputfile and outputfile[-5:] != ".xlsx":
         outputfile += ".xlsx"
 else:
-    outputfile = asksaveasfilename(defaultextension = ".xlsx", title = "Save as", filetypes = (("Excel file","*.xlsx"),("all files","*.*")))
+    outputfile = asksaveasfilename(defaultextension = ".xlsx", initialfile = inputfile, title = "Save as", filetypes = (("Excel file","*.xlsx"),("all files","*.*")))
 
 #Main logic
 if outputfile is not None and outputfile != inputfile:
     print("Writing to file", outputfile)
+
+if gui and outputfile == inputfile:
+    result = messagebox.askquestion("Warning", "Overwrite cells that are already full ?", icon = "warning")
+
+    if (result == "yes"):
+        blankmode = False
+    else:
+        blankmode = True
     
 if go and inputfile:
     wb = openpyxl.load_workbook(filename = inputfile)
