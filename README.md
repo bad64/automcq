@@ -10,7 +10,7 @@ Depends on openpyxl. Everything else should be part of Python's standard library
 **Installation**
 
 Linux: sudo make install  
-Windows: 🤷
+Windows: Download [this](https://github.com/bad64/automcq/releases/download/v1.0/automcq.exe), put it basically wherever you want, add that destination to %PATH% if you *really* want to
 
 **Why Python ?**
 
