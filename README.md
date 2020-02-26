@@ -1,4 +1,6 @@
-# AutoMCQ
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+ # AutoMCQ
 
 I had way too much time to kill on my hands.
 

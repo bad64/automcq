@@ -13,6 +13,10 @@ gui = False
 inputfile = None
 outputfile = None
 
+#Check if running from terminal or exe
+if (sys.argv[0][-4:] == ".exe"):
+    gui = True
+
 #Parsing command line args
 if len(sys.argv) < 2 and not gui:
     print("Feed me a workbook ! Or type \"" + sys.argv[0] + " help\" to get help.")
@@ -157,7 +161,10 @@ if go and inputfile:
     random.SystemRandom()
 
     possibleValues = ['A', 'B', 'C', 'D']
-    cells = [ 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20', 'B21', 'B22', 'B23', 'B24', 'B25', 'B26', 'B27', 'B28', 'B29', 'B30', 'B31', 'B32', 'B33', 'B34', 'B35', 'B36', 'B37', 'B38', 'B39', 'B40', 'B41' ]
+    cells = [ 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12',
+              'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20', 'B21', 'B22',
+              'B23', 'B24', 'B25', 'B26', 'B27', 'B28', 'B29', 'B30', 'B31', 'B32',
+              'B33', 'B34', 'B35', 'B36', 'B37', 'B38', 'B39', 'B40', 'B41' ]
     
     for i in range(len(cells)):
         if blankmode:
